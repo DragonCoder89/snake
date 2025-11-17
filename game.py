@@ -1,9 +1,11 @@
 import pygame,sys,random
 from pygame.math import Vector2
 
+speeddelay = 150
+
 class SNAKE:
     def __init__(self):
-        self.body = [Vector2(5,10), Vector2(4,10), Vector2(3,10)]
+        self.body = [Vector2(5,cell_number/2), Vector2(4,cell_number/2), Vector2(3,cell_number/2)]
         self.direction = Vector2(0,0)
         self.new_block = False
 
@@ -11,7 +13,7 @@ class SNAKE:
         self.head_down = pygame.image.load('Graphics/head_down.png').convert_alpha()
         self.head_right = pygame.image.load('Graphics/head_right.png').convert_alpha()
         self.head_left = pygame.image.load('Graphics/head_left.png').convert_alpha()
-		
+                
         self.tail_up = pygame.image.load('Graphics/tail_up.png').convert_alpha()
         self.tail_down = pygame.image.load('Graphics/tail_down.png').convert_alpha()
         self.tail_right = pygame.image.load('Graphics/tail_right.png').convert_alpha()
@@ -89,7 +91,7 @@ class SNAKE:
         self.crunch_sound.play()  
         
     def reset(self):
-        self.body = [Vector2(5,10), Vector2(4,10), Vector2(3,10)]
+        self.body = [Vector2(5,cell_number/2), Vector2(4,cell_number/2), Vector2(3,cell_number/2)]
         self.direction = Vector2(0,0)
         
 class FRUIT:
@@ -181,7 +183,7 @@ apple = pygame.image.load("Graphics/apple.png").convert_alpha()
 game_font = pygame.font.Font("Font/PoetsenOne-Regular.ttf", 25)
 
 SCREEN_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(SCREEN_UPDATE,150)
+pygame.time.set_timer(SCREEN_UPDATE,speeddelay)
 
 main_game = MAIN()
 
