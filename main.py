@@ -117,12 +117,18 @@ class MAIN:
         self.snake.move_snake()
         self.check_collision()
         self.check_fail()
-        
+        self.check_high_score()
+
     def draw_elements(self):       
         self.draw_grass()
         self.fruit.draw_fruit()
         self.snake.draw_snake()
         self.draw_score()
+
+    def check_high_score(self):
+        global high_score
+        if len(self.snake.body)-3 > high_score:
+            high_score = len(self.snake.body)-3
         
     def check_collision(self):
         if self.fruit.pos == self.snake.body[0]:
@@ -160,17 +166,26 @@ class MAIN:
                         pygame.draw.rect(screen,grass_color,grass_rect)     
             
     def draw_score(self):
+        high_score_text = str(high_score)
+        high_score_surface = game_font.render(high_score_text, True, (56, 74, 12))
+        high_score_x = int(cell_size * cell_number - 60)
+        high_score_y = int(cell_size * cell_number - 40)
+        high_score_rect = high_score_surface.get_rect(center=(high_score_x, high_score_y))
+
+        apple_rect = apple.get_rect(midright = (high_score_rect.left,high_score_rect.centery))
+
         score_text = str(len(self.snake.body) - 3)
         score_surface = game_font.render(score_text,True,(56,74,12))
-        score_x = int(cell_size*cell_number - 60)
+        score_x = apple_rect.left
         score_y = int(cell_size * cell_number - 40)
-        score_rect = score_surface.get_rect(center = (score_x,score_y))
-        apple_rect = apple.get_rect(midright = (score_rect.left,score_rect.centery))
-        bg_rect = pygame.Rect(apple_rect.left,apple_rect.top,apple_rect.width + score_rect.width+6,apple_rect.height)
-        
+        score_rect = score_surface.get_rect(midright = (score_x,score_y))
+
+        bg_rect = pygame.Rect(score_rect.left - 6,apple_rect.top,apple_rect.width + score_rect.width + high_score_rect.width + 12,apple_rect.height)
+
         pygame.draw.rect(screen,(167,209,61),bg_rect)
         screen.blit(score_surface,score_rect)
         screen.blit(apple,apple_rect)
+        screen.blit(high_score_surface,high_score_rect)
         pygame.draw.rect(screen,(56,74,12),bg_rect,2)
 
 pygame.mixer.pre_init(44100,-16,2,512)            
@@ -181,6 +196,7 @@ screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 clock = pygame.time.Clock()
 apple = pygame.image.load("Graphics/apple.png").convert_alpha()
 game_font = pygame.font.Font("Font/PoetsenOne-Regular.ttf", 25)
+high_score = 0
 
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE,speeddelay)
@@ -195,16 +211,16 @@ while True:
         if event.type == SCREEN_UPDATE:
             main_game.update()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
                 if main_game.snake.direction.y != 1:
                     main_game.snake.direction = Vector2(0,-1)
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 if main_game.snake.direction.x != -1:
                     main_game.snake.direction = Vector2(1,0)
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 if main_game.snake.direction.y != -1:
                     main_game.snake.direction = Vector2(0,1)
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 if main_game.snake.direction.x != 1:
                     main_game.snake.direction = Vector2(-1,0)
 
